@@ -54,14 +54,23 @@ retrieve_req = Net::HTTP::Post.new(retrieve_uri, 'Content-Type' => 'application/
 retrieve_req.body = {
   'consumer_key' => '38764-22db1d3236e8c5775086509d',
   'access_token' => session[:access_token],
-  'state' => 'unread',
-  'contentType' => 'article'
+  'detailType' => 'simple',
+  'state' => 'archive§',
+  'contentType' => 'article',
+  'count' => 2
   }.to_json
 
 retrieve_res = Net::HTTP.start(retrieve_uri.hostname, retrieve_uri.port, :use_ssl => retrieve_uri.scheme == 'https') do |http|
   http.request(retrieve_req)
 end
-"#{retrieve_res.body}"
 
+article = JSON.parse(retrieve_res.body)['list']
+resolved_urls = []
+article.each do |key, value|
+  resolved_urls << value['resolved_url']
 end
+"#{resolved_urls}"
+end
+
+
 
