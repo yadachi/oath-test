@@ -64,12 +64,12 @@ retrieve_res = Net::HTTP.start(retrieve_uri.hostname, retrieve_uri.port, :use_ss
   http.request(retrieve_req)
 end
 
-article = JSON.parse(retrieve_res.body)['list']
-resolved_urls = []
-article.each do |key, value|
-  resolved_urls << value['resolved_url']
+article = JSON.parse(retrieve_res.body)['list'].to_a
+items = []
+article.each do | item |
+  items << item[1]['resolved_title']
 end
-"#{resolved_urls}"
+"#{items}"
 end
 
 
